@@ -1,0 +1,8 @@
+      /*%METADATA                                                     */
+      /* %TEXT                                                        */
+      /*%EMETADATA                                                    */
+             ADDPFTRG   FILE(DETORD) TRGTIME(*AFTER) +
+                          TRGEVENT(*UPDATE) PGM(ORD700) +
+                          RPLTRG(*YES) +
+                          TRG(ORD700_DETORD_ARTICLE_UPDATE) +
+                          TRGUPDCND(*CHANGE)
