@@ -1,0 +1,10 @@
+      *%METADATA                                                      *
+      * %TEXT Country file                                            *
+      *%EMETADATA                                                     *
+                                            UNIQUE
+                                            REF(SAMREF)
+                R FCOUN
+                  COID      R
+                  COUNTR    R
+                  COISO          3
+                K COID

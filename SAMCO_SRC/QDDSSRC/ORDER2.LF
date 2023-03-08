@@ -1,0 +1,6 @@
+      *%METADATA                                                      *
+      * %TEXT Order File                                              *
+      *%EMETADATA                                                     *
+                R FORDE                     PFILE(ORDER)
+                K ORCUID
+                K ORID

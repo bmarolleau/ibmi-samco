@@ -1,0 +1,116 @@
+      *%METADATA                                                      *
+      * %TEXT Display Article                                         *
+      *%EMETADATA                                                     *
+     A*%%TS  SD  20210414  091635  VTAQUIN     REL-V7R3M0  5770-WDS
+     A*%%EC
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      REF(*LIBL/ARTICLE)
+     A                                      INDARA
+     A                                      CA03(03)
+     A                                      CA12(12)
+     A                                      PRINT
+     A                                      ERRSFL
+     A          R FMT01
+     A*%%TS  SD  20210331  095538  VTAQUIN     REL-V7R3M0  5770-WDS
+     A                                      CF04(04 'Prompt')
+     A                                  1  2'ART250'
+     A                                      COLOR(BLU)
+     A                                  3  4'Type choices, press Enter.'
+     A                                      COLOR(BLU)
+     A                                 23  3'F3=Exit'
+     A                                      COLOR(BLU)
+     A                                 23 37'F12=Cancel'
+     A                                      COLOR(BLU)
+     A                                  1 33'Article by Code'
+     A                                      DSPATR(HI)
+     A                                  5  4'Article Id . . . .'
+     A            ARID      R        B  5 24REFFLD(FARTI/ARID *LIBL/ARTICLE)
+     A  40                                  ERRMSGID(ERR0103 *LIBL/SAMMSGF 40 &-
+     A                                      ERRDATA)
+     A            ERRDATA        6A  P
+     A                                 23 19'F4=Prompt'
+     A                                      COLOR(BLU)
+     A          R FMT02
+     A*%%TS  SD  20210414  091635  VTAQUIN     REL-V7R3M0  5770-WDS
+     A                                      CA07(07 'Providers')
+     A                                  1  2'ART250 '
+     A                                      COLOR(BLU)
+     A                                  3  4'Press Enter to continue.'
+     A                                      COLOR(BLU)
+     A                                 23  3'F3=Exit'
+     A                                      COLOR(BLU)
+     A                                 23 36'F12=Cancel'
+     A                                      COLOR(BLU)
+     A                                  1 33'Article by Code'
+     A                                  5  4'Article id . . . . . . :'
+     A                                  6  4'Description  . . . . . :'
+     A                                  7  4'Familly. . . . . . . . :'
+     A                                  9  4'VAT code . . . . . . . :'
+     A                                 10  4'Reference sale price . :'
+     A                                 11  9'with VAT  . . . . :'
+     A                                 12  4'Stock price  . . . . . .'
+     A                                 13  4'Minimum stock  . . . . :'
+     A                                 14  4'Stock  . . . . . . . . :'
+     A                                 15  9'Value . . . . . . :'
+     A            ARDESC    R        O  6 30REFFLD(FARTI/ARDESC *LIBL/ARTICLE)
+     A            ARTIFA    R        O  7 30REFFLD(FARTI/ARTIFA *LIBL/ARTICLE)
+     A            ARSALEPR  R        O 10 30REFFLD(FARTI/ARSALEPR *LIBL/ARTICLE)
+     A            ARMINQTY  R        O 13 30REFFLD(FARTI/ARMINQTY *LIBL/ARTICLE)
+     A            ARSTOCK   R        O 14 30REFFLD(FARTI/ARSTOCK *LIBL/ARTICLE)
+     A            ARVATCD   R        O  9 30REFFLD(FARTI/ARVATCD *LIBL/ARTICLE)
+     A            ARWHSPR   R        O 12 30REFFLD(FARTI/ARWHSPR *LIBL/ARTICLE)
+     A            FADESC    R        O  8 30REFFLD(FFAMI/FADESC *LIBL/FAMILLY)
+     A            VATINCL   R        O 11 30REFFLD(FARTI/ARSALEPR *LIBL/ARTICLE)
+     A            STOPRICE       9Y 2O 15 30TEXT('STOCK PRICE')
+     A                                      EDTCDE(2)
+     A            ARID      R        O  5 30REFFLD(FARTI/ARID *LIBL/ARTICLE)
+     A            INFO         400A  O 17  1
+     A                                 23 17'F7=Providers'
+     A                                      COLOR(BLU)
+     A          R SFL03                     SFL
+     A*%%TS  SD  20210331  103429  VTAQUIN     REL-V7R3M0  5770-WDS
+     A  33                                  SFLNXTCHG
+     A            OPT03          1Y 0B  6  3
+     A  34                                  DSPATR(RI)
+     A  34                                  DSPATR(PC)
+     A                                      EDTCDE(Z)
+     A            ARID      R        O  6  5REFFLD(ARID ARTICLE)
+     A            ARDESC    R        O  6 12REFFLD(FARTI/ARDESC *LIBL/ARTICLE)
+     A            ARTIFA    R        O  6 63REFFLD(FARTI/ARTIFA *LIBL/ARTICLE)
+     A          R CTL03                     SFLCTL(SFL03)
+     A*%%TS  SD  20210331  103429  VTAQUIN     REL-V7R3M0  5770-WDS
+     A N80                                  PAGEDOWN(25 'dynamic subfile')
+     A                                      CF04(04)
+     A                                      OVERLAY
+     A  31                                  SFLDSP
+     A  32                                  SFLDSPCTL
+     A  30                                  SFLCLR
+     A  80                                  SFLEND(*MORE)
+     A                                      SFLSIZ(0017)
+     A                                      SFLPAG(0016)
+     A  35                                  SFLMSG('INVALID OPTION' 35)
+     A  36                                  SFLMSG('ONLY ONE SELECTION' 36)
+     A            RRB03          4S 0H      SFLRCDNBR
+     A                                  1 32'Select an Article'
+     A                                      DSPATR(HI)
+     A                                  3  3'Make a selection. Press Enter'
+     A                                      COLOR(BLU)
+     A                                  4  5'1=Select'
+     A                                      COLOR(BLU)
+     A                                  5  2'Opt'
+     A                                      DSPATR(HI)
+     A                                  5  6'Code'
+     A                                      DSPATR(HI)
+     A                                  1  2'ART250'
+     A                                      COLOR(BLU)
+     A                                  5 12'Description'
+     A                                      DSPATR(HI)
+     A                                  5 63'Fam'
+     A                                      DSPATR(HI)
+     A          R KEY03
+     A*%%TS  SD  20210331  103429  VTAQUIN     REL-V7R3M0  5770-WDS
+     A                                      OVERLAY
+     A                                 23  2'F3=Exit'
+     A                                      COLOR(BLU)
+     A                                 23 14'F12=Cancel'
+     A                                      COLOR(BLU)

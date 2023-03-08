@@ -1,0 +1,6 @@
+      *%METADATA                                                      *
+      * %TEXT Customer file                                           *
+      *%EMETADATA                                                     *
+                R FCUST                     PFILE(CUSTOMER)
+                K CUSTNM
+                K CUID
