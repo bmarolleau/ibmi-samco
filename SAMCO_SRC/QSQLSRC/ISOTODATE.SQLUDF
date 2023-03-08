@@ -1,0 +1,30 @@
+      /*%METADATA                                                     */
+      /* %TEXT Transfrom num ISO to date                              */
+      /*%EMETADATA                                                    */
+     --%CSTD===========================================================*
+     --* Application. : NEW        New Sample                          *
+     --* Composant. . : ISOTODATE                     Type: SQLUDF     *
+     --*===============================================================*
+     --* Sous-système :                                                *
+     --* Fonction . . :                                                *
+     --* Sous-fonction:                                                *
+     --*%S=============================================================*
+     --* Description des fonctionnalités:                              *
+     --*                                                               *
+     --*                                                               *
+     --*                                                               *
+     --*%E=============================================================*
+     --* AUTEUR:    VTAQUIN    29/11/2016 17:02  01.01.00              *
+     --* MODIFS: ** VTAQUIN    29/11/2016   :    01.01.00    00/       *
+     --%ECSTD==========================================================*
+     CREATE FUNCTION ISO_Num_To_Date (
+       DECIMAL(8, 0) )
+       RETURNS DATE
+       LANGUAGE RPGLE
+       SPECIFIC ISOTODATE
+       DETERMINISTIC
+       NO SQL
+       RETURNS NULL ON NULL INPUT
+       NO EXTERNAL ACTION
+       EXTERNAL NAME DAT001
+       PARAMETER STYLE SQL ;

@@ -1,0 +1,9 @@
+      /*%METADATA                                                     */
+      /* %TEXT Next customer Number                                   */
+      /*%EMETADATA                                                    */
+
+       CREATE SEQUENCE CUSSEQ
+       START WITH 1551
+       INCREMENT BY 1
+       NO MAXVALUE
+       NO CYCLE   ;
