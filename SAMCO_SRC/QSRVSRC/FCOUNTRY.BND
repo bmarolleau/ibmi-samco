@@ -1,0 +1,9 @@
+      /*%METADATA                                                     */
+      /* %TEXT                                                        */
+      /*%EMETADATA                                                    */
+STRPGMEXP PGMLVL(*CURRENT)  SIGNATURE('V1')
+  EXPORT SYMBOL('EXISTCOUNTRY')
+  EXPORT SYMBOL('GETCOUNTRYISO3')
+  EXPORT SYMBOL('GETCOUNTRYNAME')
+  EXPORT SYMBOL('SLTCOUNTRY')
+ENDPGMEXP
