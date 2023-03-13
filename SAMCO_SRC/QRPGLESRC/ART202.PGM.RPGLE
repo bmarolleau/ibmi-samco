@@ -10,8 +10,8 @@
      F                                     sfile(sfl01:rrn01)
      F                                     Infds(Info)
 
-      /copy qprotosrc,provider
-      /copy qprotosrc,article
+      /copy ../qprotosrc/provider.RPGLEINC
+      /copy ../QPROTOSRC/ARTICLE.RPGLEINC
 
      d art202          pr
      d  prid                               like(apprid)

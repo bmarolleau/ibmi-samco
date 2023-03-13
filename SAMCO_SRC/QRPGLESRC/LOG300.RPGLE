@@ -4,9 +4,9 @@
       *   %XREF XREFTYPE(*OBJ)   OBJ(SAMLOG) OBJTYPE(*USRSPC)   USAGE(*UPD)
 
      h nomain
-
+   
       /copy qprotosrc,apicall
-      /copy qprotosrc,log
+      /copy ../qprotosrc/log.RPGLEINC
      d init            pr
 
      d pos             s             10i 0 based(p1)

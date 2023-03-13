@@ -6,8 +6,8 @@
        Dcl-F  PRO250d workstn   indds(indds);
        dcl-f  provide1 disk keyed;
 
-      /copy qprotosrc,provider
-      /copy qprotosrc,country
+      /copy ../qprotosrc/provider.RPGLEINC
+      /copy ../qprotosrc/country.RPGLEINC
 
        dcl-pr Items extpgm('ART202');
          id   like(prid);
