@@ -5,7 +5,7 @@
 
      Farticle1  UF   E           K DISK
 
-     /copy ../qprotosrc/log.RPGLEINC
+      /copy ../qprotosrc/log.rpgleinc
 
      d UpdArt          pr
      d   qty                          5  0 value
