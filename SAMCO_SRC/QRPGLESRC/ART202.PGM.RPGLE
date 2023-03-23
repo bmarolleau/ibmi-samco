@@ -11,7 +11,7 @@ Dcl-F art202d    WORKSTN
                          sfile(sfl01:rrn01)
                          Infds(Info);
 
-/copy ../qprotosrc/provider.RPGLEINC
+/copy ../QPROTOSRC/PROVIDER.RPGLEINC
 /copy ../QPROTOSRC/ARTICLE.RPGLEINC
 
 Dcl-Pr art202;
