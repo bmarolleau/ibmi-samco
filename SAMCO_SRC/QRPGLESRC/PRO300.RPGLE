@@ -1,6 +1,6 @@
       *%METADATA                                                                          *
       * %TEXT Functions Provider                                                          *
-      *%EMETADATA                                                                         *
+      *%EMETADATA                                                                          *
      h nomain
 
      FPROVIDE1  if   e           k disk    usropn
