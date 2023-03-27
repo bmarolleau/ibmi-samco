@@ -1,0 +1,17 @@
+{
+    "IBM i Developer.variables": [
+        {
+            "name": "&verlibsamco",
+            "value": "SAMDSB0002"
+        }
+    ],
+    "IBM i Developer.projects": [
+        {
+            "project": "ibmi-samco",
+            "hostName": "10.3.61.1",
+            "userID": "team12",
+            "buildDirInitialized": true,
+            "buildDir": "/home/TEAM12/ibmi-samco"
+        }
+    ]
+}
