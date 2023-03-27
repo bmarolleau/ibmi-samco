@@ -14,6 +14,7 @@ Dcl-F art201d    WORKSTN
 /copy ../QPROTOSRC/PROVIDER.RPGLEINC
 /copy ../QPROTOSRC/ARTICLE.RPGLEINC
 
+
 Dcl-Pr art201;
   arid            like(aparid);
 End-Pr;

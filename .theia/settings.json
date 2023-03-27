@@ -11,7 +11,10 @@
             "hostName": "10.3.61.1",
             "userID": "team12",
             "buildDirInitialized": true,
-            "buildDir": "/home/TEAM12/ibmi-samco"
+            "buildDir": "/home/TEAM12/ibmi-samco",
+            "queries": [
+                "RPGDEV"
+            ]
         }
     ]
 }
