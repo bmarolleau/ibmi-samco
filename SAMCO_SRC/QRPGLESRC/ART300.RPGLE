@@ -1,138 +1,119 @@
-      *%METADATA                                                                          *
-      * %TEXT Function Article                                                            *
-      *%EMETADATA                                                                         *
-     h nomain
+**FREE
+//%METADATA                                                                          *
+// %TEXT Function Article                                                            *
+//%EMETADATA                                                                         *
+Ctl-Opt nomain;
 
-     FARTICLE1  if   e           k disk    usropn
+Dcl-F ARTICLE1   Keyed usropn;
 
-      /copy qprotosrc,ARTICLE
+/copy ../qprotosrc/ARTICLE.RPGLEINC
 
-     d chainARTICLE1   pr
-     D P_ARID                         6A    value
+Dcl-Pr chainARTICLE1;
+  P_ARID          Char(6)         value;
+End-Pr;
 
-     D K_ARID          S                   LIKE(ARID)
+Dcl-S K_ARID          LIKE(ARID);
 
-     C     kf            klist
-     C                   KFLD                    K_ARID
+//=============================================
+Dcl-Proc GetArtDesc export;
+  Dcl-Pi GetArtDesc like(ardesc);
+    P_ARID          Char(6)         value;
+  End-Pi;
+  chainARTICLE1(P_ARID
+        );
+  return ARDESC;
+End-Proc GetArtDesc;
+//=============================================
+Dcl-Proc GetArtRefSalPrice export;
+  Dcl-Pi GetArtRefSalPrice like(arsalepr);
+    P_ARID          Char(6)         value;
+  End-Pi;
+  chainARTICLE1(P_ARID
+        );
+  return ARSALEPR;
+End-Proc;
+//=============================================
+Dcl-Proc GetArtStockPrice export;
+  Dcl-Pi GetArtStockPrice like(arwhspr);
+    P_ARID          Char(6)         value;
+  End-Pi;
+  chainARTICLE1(P_ARID
+        );
+  return ARWHSPR;
+End-Proc;
+//=============================================
+Dcl-Proc GetArtFam export;
+  Dcl-Pi GetArtFam like(artifa);
+    P_ARID          Char(6)         value;
+  End-Pi;
+  chainARTICLE1(P_ARID
+        );
+  return ARTIFA;
+End-Proc GetArtFam;
+//=============================================
+Dcl-Proc GetArtStock export;
+  Dcl-Pi GetArtStock like(arstock);
+    P_ARID          Char(6)         value;
+  End-Pi;
+  chainARTICLE1(P_ARID
+        );
+  return ARSTOCK;
+End-Proc GetArtStock;
+//=============================================
+Dcl-Proc GetArtMinStock export;
+  Dcl-Pi GetArtMinStock like(arminqty);
+    P_ARID          Char(6)         value;
+  End-Pi;
+  chainARTICLE1(P_ARID
+        );
+  return ARMINQTY;
+End-Proc GetArtMinStock;
+//=============================================
+Dcl-Proc GetArtVatCode export;
+  Dcl-Pi GetArtVatCode like(arvatcd);
+    P_ARID          Char(6)         value;
+  End-Pi;
+  chainARTICLE1(P_ARID
+        );
+  return ARvatcd ;
+End-Proc GetArtVatCode;
+//=============================================
+Dcl-Proc ExistArt export;
+  Dcl-Pi ExistArt Ind;
+    P_ARID          Char(6)         value;
+  End-Pi;
+  chainARTICLE1(P_ARID
+        );
+  return %found(article1) and ardel <> 'X';
+End-Proc ExistArt;
 
-      *=============================================
-     PGetArtDesc       B                     export
-     DGetArtDesc       PI                   like(ardesc)
-     D P_ARID                         6A    value
-      /free
-         chainARTICLE1(P_ARID
-               );
-         return ARDESC;
-      /end-free
-     pGetArtDesc       e
-      *=============================================
-     PGetArtRefSalPrice...
-     P                 B                     export
-     DGetArtRefSalPrice...
-     D                 PI                   like(arsalepr)
-     D P_ARID                         6A    value
-      /free
-         chainARTICLE1(P_ARID
-               );
-         return ARSALEPR;
-      /end-free
-     p                 e
-      *=============================================
-     PGetArtStockPrice...
-     P                 B                     export
-     DGetArtStockPrice...
-     D                 PI                   like(arwhspr)
-     D P_ARID                         6A    value
-      /free
-         chainARTICLE1(P_ARID
-               );
-         return ARWHSPR;
-      /end-free
-     p                 e
-      *=============================================
-     PGetArtFam        B                     export
-     DGetArtFam        PI                   like(artifa)
-     D P_ARID                         6A    value
-      /free
-         chainARTICLE1(P_ARID
-               );
-         return ARTIFA;
-      /end-free
-     pGetArtFam        e
-      *=============================================
-     PGetArtStock      B                     export
-     DGetArtStock      PI                   like(arstock)
-     D P_ARID                         6A    value
-      /free
-         chainARTICLE1(P_ARID
-               );
-         return ARSTOCK;
-      /end-free
-     pGetArtStock      e
-      *=============================================
-     PGetArtMinStock   B                     export
-     DGetArtMinStock   PI                   like(arminqty)
-     D P_ARID                         6A    value
-      /free
-         chainARTICLE1(P_ARID
-               );
-         return ARMINQTY;
-      /end-free
-     pGetArtMinStock   e
-      *=============================================
-     PGetArtVatCode    B                     export
-     DGetArtVatCode    PI                   like(arvatcd)
-     D P_ARID                         6A    value
-      /free
-         chainARTICLE1(P_ARID
-               );
-         return ARvatcd ;
-      /end-free
-     pGetArtVatCode    e
-      *=============================================
-     P ExistArt        B                     export
-     D ExistArt        PI              n
-     D P_ARID                         6A    value
-      /free
-         chainARTICLE1(P_ARID
-               );
-         return %found(article1) and ardel <> 'X';
-      /end-free
-     p ExistArt        e
+//=============================================
+Dcl-Proc IsArtDeleted export;
+  Dcl-Pi IsArtDeleted Ind;
+    P_ARID          Char(6)         value;
+  End-Pi;
+  chainARTICLE1(P_ARID
+        );
+  return ArDEL = 'X';
+End-Proc IsArtDeleted;
 
-      *=============================================
-     PIsArtDeleted     B                     export
-     DIsArtDeleted     PI              n
-     D P_ARID                         6A    value
-      /free
-         chainARTICLE1(P_ARID
-               );
-         return ArDEL = 'X';
-      /end-free
-     pIsArtDeleted     e
+Dcl-Proc chainARTICLE1;
+  Dcl-Pi chainARTICLE1;
+    P_ARID          Char(6)         value;
+  End-Pi;
+ if not %open(ARTICLE1);
+   open ARTICLE1;
+ endif;
+  if P_ARID <> ARID;
+    K_ARID =  P_ARID;
+    clear *all FARTI;
+    chain K_ARID ARTICLE1;
+  endif;
+End-Proc chainARTICLE1;
 
-     p chainARTICLE1   b
-     d chainARTICLE1   pi
-     D P_ARID                         6A    value
-      /free
-        if not %open(ARTICLE1);
-          open ARTICLE1;
-        endif;
-         if P_ARID <> ARID;
-           K_ARID =  P_ARID;
-           clear *all FARTI;
-           chain kf ARTICLE1;
-         endif;
-      /end-free
-     p chainARTICLE1   e
-
-     p closeARTICLE1   b
-     d closeARTICLE1   pi
-      /free
-        if %open(ARTICLE1);
-          close ARTICLE1;
-        endif;
-      /end-free
-     p closeARTICLE1   e
-
-
+Dcl-Proc closeARTICLE1;
+  Dcl-Pi closeARTICLE1 End-Pi;
+ if %open(ARTICLE1);
+   close ARTICLE1;
+ endif;
+End-Proc closeARTICLE1;
