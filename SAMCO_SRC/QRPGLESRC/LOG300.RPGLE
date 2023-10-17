@@ -6,7 +6,7 @@
      h nomain
 
       /copy ../qprotosrc/apicall.rpgleinc
-      /copy qprotosrc,log
+      /copy ../qprotosrc/log.rpgleinc
      d init            pr
 
      d pos             s             10i 0 based(p1)
