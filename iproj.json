@@ -1,20 +1,23 @@
 {
-    "description": "Arcad App for Merlin labs.",
-    "version": "0.0.1",
-    "includePath": [
-        "SAMCO_SRC/QPROTOSRC"
-    ],
-    "repository": "git@github.com:bmarolleau/ibmi-samco.git",
-    "objlib": "&verlibsamco",
-    "curlib": "*CRTDFT",
-    "extensions": {
-        "arcad": {
-            "code": "SAMCO",
-            "libraryPrefix": "SAM",
-            "iasp": "*SYSBAS",
-            "validated": true
-        }
-    },
-    "buildCommand": "elias compile {branch}",
-    "compileCommand": "elias compile {branch} -f {filename}"
+  "description": "Arcad App for Merlin labs.",
+  "version": "0.0.1",
+  "includePath": [
+    "SAMCO_SRC/QPROTOSRC"
+  ],
+  "repository": "git@github.com:bmarolleau/ibmi-samco.git",
+  "objlib": "&verlibsamco",
+  "curlib": "*CRTDFT",
+  "extensions": {
+    "arcad": {
+      "code": "SAMCO",
+      "libraryPrefix": "SAM",
+      "iasp": "*SYSBAS",
+      "validated": true
+    }
+  },
+  "buildCommand": "elias compile {branch}",
+  "compileCommand": "elias compile {branch} -f {filename}",
+  "postUsrlibl": [
+    "SAMCO_DTA"
+  ]
 }
