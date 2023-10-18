@@ -74,7 +74,7 @@ keyl=key01
 Enter='msg cpd9817 qcpfmsg'
 panelid=zmenu
 topsep=sysnam.
-Arcad Sample Application Team12
+Arcad Sample Application AppMod1
 :menu depth='*'
 scroll=Yes
 Botsep=none.
