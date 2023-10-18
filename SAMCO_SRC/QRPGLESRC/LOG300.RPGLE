@@ -1,6 +1,6 @@
 **FREE
 //%METADATA                                                                          *
-// %TEXT Add entry to log                                                            *
+// %TEXT Add entry to log (fixed)                                                    *
 //%EMETADATA                                                                         *
 //   %XREF XREFTYPE(*OBJ)   OBJ(SAMLOG) OBJTYPE(*USRSPC)   USAGE(*UPD)
 
