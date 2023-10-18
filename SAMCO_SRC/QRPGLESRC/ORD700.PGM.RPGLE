@@ -5,7 +5,7 @@
 
      Farticle1  UF   E           K DISK
 
-      /copy qprotosrc,log
+      /copy ../qprotosrc/log.rpgleinc
 
      d UpdArt          pr
      d   qty                          5  0 value
@@ -75,10 +75,10 @@
      c                   callp     UpdArt(new.odqty:new.odarid)
      c                   when      teven = '2'
      c                   eval      po = %addr(parm1) + oldoff
-     c                   callp(e)  addlogEntry('ORD700:Order Line deleted ' +
-     c                             %char(Old.odorid) + ' ' + %char(Old.odline)
-     c                              + ' article : ' + old.odarid
-     c                              + ' quantity : ' + %char(old.odqty))
+      *c                   callp(e)  addlogEntry('ORD700:Order Line deleted ' +
+      *c                             %char(Old.odorid) + ' ' + %char(Old.odline)
+      *c                              + ' article : ' + old.odarid
+      *c                              + ' quantity : ' + %char(old.odqty))
      c                   callp     UpdArt(-Old.odqty + Old.odqtyliv:old.odarid)
      c                   when      teven = '3'
      c                   eval      pn = %addr(parm1) + newoff

@@ -1,46 +1,44 @@
-      *%METADATA                                                                          *
-      * %TEXT Add entry to log                                                            *
-      *%EMETADATA                                                                         *
-      *   %XREF XREFTYPE(*OBJ)   OBJ(SAMLOG) OBJTYPE(*USRSPC)   USAGE(*UPD)
+**FREE
+//%METADATA                                                                          *
+// %TEXT Add entry to log                                                            *
+//%EMETADATA                                                                         *
+//   %XREF XREFTYPE(*OBJ)   OBJ(SAMLOG) OBJTYPE(*USRSPC)   USAGE(*UPD)
 
-     h nomain
+Ctl-Opt nomain;
 
-     /copy ../qprotosrc/apicall.rpgleinc
-     /copy ../qprotosrc/log.rpgleinc
-     d init            pr
+/copy ../qprotosrc/apicall.rpgleinc
+/copy ../qprotosrc/log.rpgleinc
+Dcl-Pr init End-Pr;
 
-     d pos             s             10i 0 based(p1)
-     d data            s            600    based(p2)
-     d usrspc          s             20
-     d inz             s               n
-     d User            s             10    inz(*USER)
+Dcl-S pos             Int(10)         based(p1);
+Dcl-S data            Char(600)       based(p2);
+Dcl-S usrspc          Char(20);
+Dcl-S inz             Ind;
+Dcl-S User            Char(10)        inz(*USER);
 
-     p AddLogEntry     b                   export
-     d AddLogEntry     pi
-     d  entry                       500    value
+Dcl-Proc AddLogEntry export;
+  Dcl-Pi AddLogEntry;
+    entry           Char(500)       value;
+  End-Pi;
 
-     d  data2          s            500    varying
-      /free
-        if not inz;
-          init();
-        endif;
-        p2 = p1 + pos;
-        data2 = 'User: ' +user + ' * ';
-        data2 += 'Date: '  + %char(%Timestamp()) + ' * ' ;
-        data2 += 'Msg: '  + %trim(entry) + ' ***' ;
-        data = data2;
-        pos += %len(data2);
-      /end-free
+  Dcl-S data2           VarChar(500);
+ if not inz;
+   init();
+ endif;
+ p2 = p1 + pos;
+ data2 = 'User: ' +user + ' * ';
+ data2 += 'Date: '  + %char(%Timestamp()) + ' * ' ;
+ data2 += 'Msg: '  + %trim(entry) + ' ***' ;
+ data = data2;
+ pos += %len(data2);
 
-     p AddLogEntry     e
+End-Proc AddLogEntry;
 
-     p init            b
-     d init            pi
+Dcl-Proc init;
+  Dcl-Pi init End-Pi;
 
-      /free
-        usrspc = 'SAMLOG    *LIBL';
-        inz = *on;
-        rtvusrspcptr(usrspc:p1);
-      /end-free
+ usrspc = 'SAMLOG    *LIBL';
+ inz = *on;
+ rtvusrspcptr(usrspc:p1);
 
-     p init            e
+End-Proc init;

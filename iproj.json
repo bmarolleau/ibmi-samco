@@ -18,6 +18,7 @@
   "buildCommand": "elias compile {branch}",
   "compileCommand": "elias compile {branch} -f {filename}",
   "postUsrlibl": [
-    "SAMCO_DTA"
+    "SAMCO_DTA",
+    "SAMCO_OBJ"
   ]
 }

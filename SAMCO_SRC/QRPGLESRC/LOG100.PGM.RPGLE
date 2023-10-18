@@ -6,7 +6,7 @@
      fparameter if   e           k disk
      f                                     infds(info)
 
-      /copy qprotosrc,apicall
+      /copy ../qprotosrc/apicall.rpgleinc
 
      d info            ds
      D  lib                   93    102
