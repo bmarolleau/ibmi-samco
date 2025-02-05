@@ -1,0 +1,5 @@
+.*
+!**/.ibmi.json
+!**/.ibmi
+!.arcadignore
+!.elias
