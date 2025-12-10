@@ -13,7 +13,7 @@ cd ibmi-samco
 ./setup-build.sh SAMCO
 
 # 3. Build everything
-makei
+makei build
 
 # Done! Your application is compiled in library SAMCO
 ```
@@ -44,42 +44,30 @@ The build system uses **IBM i Bob** (Better Object Builder) - a modern make-base
 
 ```bash
 # Build everything
-makei
+makei build
 
 # Build to different library
-makei BUILDLIB=SAMCODEV
+makei build BIN_LIB=SAMCODEV
 
-# Build only database objects
-makei database
-
-# Build only programs
-makei programs
+# Compile specific file
+makei compile -f qrpglesrc/COU200.PGM.RPGLE
 
 # Build with 4 parallel jobs (faster!)
-makei -j4
-
-# See all available targets
-makei help
+makei build -j4
 
 # Re-setup after source changes
 ./setup-build.sh SAMCO
-makei
+makei build
 ```
 
 ## Build Targets Explained
 
-| Target | What It Builds |
-|--------|----------------|
-| `all` | Everything (default) |
-| `database` | Files, tables, views |
-| `programs` | All programs and service programs |
-| `physical-files` | Physical files only |
-| `logical-files` | Logical files only |
-| `display-files` | Display files only |
-| `modules` | RPGLE modules only |
-| `service-programs` | Service programs only |
-| `bound-programs` | Bound programs only |
-| `sql-objects` | SQL tables, views, procedures |
+| Command | What It Does |
+|---------|--------------|
+| `makei build` | Build everything (default) |
+| `makei build BIN_LIB=MYLIB` | Build to specific library |
+| `makei compile -f <file>` | Compile specific file |
+| `makei build -j4` | Build with 4 parallel jobs |
 
 ## Typical Workflows
 
@@ -93,24 +81,24 @@ makei
 ```bash
 # Option 1: Re-upload and rebuild everything
 ./setup-build.sh SAMCO
-makei
+makei build
 
-# Option 2: Upload just the changed file
+# Option 2: Upload just the changed file and compile it
 system "CPYFRMSTMF FROMSTMF('SAMCO_SRC/QRPGLESRC/COU200.PGM.RPGLE') \
         TOMBR('/QSYS.LIB/SAMCO.LIB/QRPGLESRC.FILE/COU200.MBR') \
         MBROPT(*REPLACE)"
-makei SAMCO_SRC/QRPGLESRC/COU200.PGM.RPGLE
+makei compile -f qrpglesrc/COU200.PGM.RPGLE
 ```
 
 ### Development vs Production
 ```bash
 # Development
 ./setup-build.sh SAMCODEV
-makei BUILDLIB=SAMCODEV
+makei build BIN_LIB=SAMCODEV
 
 # Production
 ./setup-build.sh SAMCO
-makei BUILDLIB=SAMCO
+makei build BIN_LIB=SAMCO
 ```
 
 ### Clean Build
@@ -118,7 +106,7 @@ makei BUILDLIB=SAMCO
 # Delete library and rebuild from scratch
 system "DLTLIB LIB(SAMCO)"
 ./setup-build.sh SAMCO
-makei
+makei build
 ```
 
 ## Understanding the Build Order
@@ -183,19 +171,19 @@ system "CRTLIB LIB(SAMCO) TEXT('SAMCO Application')"
 
 ## Advanced Usage
 
-### Build Specific File
+### Compile Specific File
 ```bash
-# Build just one program
-makei SAMCO_SRC/QRPGLESRC/COU200.PGM.RPGLE
+# Compile just one program
+makei compile -f qrpglesrc/COU200.PGM.RPGLE
 
-# Build just one display file
-makei SAMCO_SRC/QDDSSRC/COU200D.DSPF
+# Compile just one display file
+makei compile -f qddssrc/COU200D.DSPF
 ```
 
 ### Parallel Builds
 ```bash
 # Use 8 parallel jobs for faster builds
-makei -j8
+makei build -j8
 ```
 
 ### Custom Include Paths
@@ -248,10 +236,10 @@ steps:
 
 ## Getting Help
 
-1. Run `makei help` to see all targets
-2. Check [BUILD.md](BUILD.md) for detailed troubleshooting
-3. Review IBM i Bob documentation: https://github.com/IBM/ibmi-bob
-4. Check compilation messages: `system "DSPSPLF"`
+1. Check [BUILD.md](BUILD.md) for detailed troubleshooting
+2. Review Bob documentation: https://github.com/IBM/ibmi-bob
+3. Check compilation messages: `system "DSPSPLF"`
+4. View build logs in `.logs/` directory
 
 ---
 

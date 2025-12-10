@@ -104,42 +104,23 @@ Once source files are in place, run the build:
 
 ```bash
 # Build everything to SAMCO library
-makei
+makei build
 
 # Or build to a different library
-makei BUILDLIB=SAMCODEV
+makei build BIN_LIB=SAMCODEV
 
-# Build only database objects
-makei database
-
-# Build only programs
-makei programs
-
-# See all available targets
-makei help
+# Compile specific file
+makei compile -f qrpglesrc/COU200.PGM.RPGLE
 ```
 
-## Build Targets
+## Build Commands
 
-The makefile provides several targets for building different parts of the application:
+Bob provides the following commands:
 
-- `all` (default) - Build entire application
-- `database` - Build all database objects (files, tables, views)
-- `programs` - Build all programs and service programs
-- `binding-dirs` - Build binding directories
-- `message-files` - Build message files
-- `data-areas` - Build data areas
-- `physical-files` - Build physical files
-- `logical-files` - Build logical files
-- `display-files` - Build display files
-- `print-files` - Build print files
-- `sql-objects` - Build SQL objects (tables, views, procedures, etc.)
-- `modules` - Build RPGLE modules
-- `service-programs` - Build service programs
-- `bound-programs` - Build bound programs
-- `commands` - Build commands
-- `menus` - Build menus and panel groups
-- `triggers` - Build triggers
+- `makei build` - Build entire application
+- `makei build BIN_LIB=library` - Build to specific library
+- `makei compile -f <file>` - Compile specific source file
+- `makei build -j4` - Build with 4 parallel jobs
 
 ## Build Order
 
@@ -165,17 +146,17 @@ The build system automatically handles dependencies and builds objects in the co
 ### Change Target Library
 
 ```bash
-makei BUILDLIB=MYLIB
+makei build BIN_LIB=MYLIB
 ```
 
-### Build Specific Object Types
+### Compile Specific Files
 
 ```bash
-# Build only display files
-makei display-files
+# Compile a specific RPGLE program
+makei compile -f qrpglesrc/COU200.PGM.RPGLE
 
-# Build only RPGLE programs
-makei bound-programs
+# Compile a display file
+makei compile -f qddssrc/COU200D.DSPF
 ```
 
 ### Parallel Builds
@@ -184,7 +165,7 @@ Bob supports parallel builds for faster compilation:
 
 ```bash
 # Build with 4 parallel jobs
-makei -j4
+makei build -j4
 ```
 
 ## Helper Script: Upload Sources
@@ -271,7 +252,7 @@ The build system can be integrated into CI/CD pipelines. See `azure-pipelines.ym
 1. Clone repository on IBM i
 2. Create/clean build library
 3. Upload sources to source physical files
-4. Run `makei` to build
+4. Run `makei build` to build
 5. Run tests (if applicable)
 6. Deploy to production library
 

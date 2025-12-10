@@ -38,20 +38,19 @@ SAMCO is a sample IBM i application demonstrating modern development practices i
 
 3. **Build the application:**
    ```bash
-   makei
+   makei build
    ```
    Or build to a different library:
    ```bash
-   makei BUILDLIB=SAMCODEV
+   makei build BIN_LIB=SAMCODEV
    ```
 
 ### Build Options
 
 ```bash
-makei              # Build everything
-makei database     # Build database objects only
-makei programs     # Build programs only
-makei help         # Show all available targets
+makei build                  # Build everything
+makei build BIN_LIB=MYLIB    # Build to different library
+makei compile -f <file>      # Compile specific file
 ```
 
 ## Documentation
