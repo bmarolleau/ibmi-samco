@@ -1,4 +1,24 @@
+# Build logs
 .logs/*
 .logs/output.log
 .evfevent/*
 .elias
+
+# Bob build artifacts
+*.d
+.bob/
+
+# Editor files
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.old
