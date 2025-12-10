@@ -1,8 +1,11 @@
 # SAMCO Application Makefile
-# This makefile uses IBM i Bob to build the entire application
+# This makefile uses IBM i Bob (makei) to build the entire application
 
 # Include the build rules
 include Rules.mk
+
+# Shell to use
+SHELL=/QOpenSys/pkgs/bin/bash
 
 # Default target library (can be overridden with: make BUILDLIB=MYLIB)
 BUILDLIB ?= SAMCO
@@ -124,7 +127,7 @@ help:
 	@echo "  help             - Show this help message"
 	@echo ""
 	@echo "Examples:"
-	@echo "  make                    # Build everything to SAMCO library"
-	@echo "  make BUILDLIB=SAMCODEV  # Build to SAMCODEV library"
-	@echo "  make database           # Build only database objects"
-	@echo "  make programs           # Build only programs"
+	@echo "  makei                    # Build everything to SAMCO library"
+	@echo "  makei BUILDLIB=SAMCODEV  # Build to SAMCODEV library"
+	@echo "  makei database           # Build only database objects"
+	@echo "  makei programs           # Build only programs"

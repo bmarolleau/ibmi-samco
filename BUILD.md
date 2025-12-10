@@ -6,12 +6,12 @@ This document explains how to build the SAMCO application using IBM i Bob (Bette
 
 1. **Install IBM i Bob** on your IBM i system:
    ```bash
-   yum install ibmi-bob
+   yum install tobi
    ```
 
 2. **Install GNU Make** (if not already installed):
    ```bash
-   yum install make-gnu
+   yum install tobi
    ```
 
 3. **Clone the repository** to your IBM i system (or upload the source files)
@@ -29,7 +29,7 @@ ssh user@youribmi
 
 # Clone the repository
 cd /home/youruser
-git clone https://github.com/bmarolleau/ibmi-samco.git
+git clone -b demo1 https://github.com/bmarolleau/ibmi-samco.git
 cd ibmi-samco
 ```
 
@@ -104,19 +104,19 @@ Once source files are in place, run the build:
 
 ```bash
 # Build everything to SAMCO library
-gmake
+makei
 
 # Or build to a different library
-gmake BUILDLIB=SAMCODEV
+makei BUILDLIB=SAMCODEV
 
 # Build only database objects
-gmake database
+makei database
 
 # Build only programs
-gmake programs
+makei programs
 
 # See all available targets
-gmake help
+makei help
 ```
 
 ## Build Targets
@@ -165,17 +165,17 @@ The build system automatically handles dependencies and builds objects in the co
 ### Change Target Library
 
 ```bash
-gmake BUILDLIB=MYLIB
+makei BUILDLIB=MYLIB
 ```
 
 ### Build Specific Object Types
 
 ```bash
 # Build only display files
-gmake display-files
+makei display-files
 
 # Build only RPGLE programs
-gmake bound-programs
+makei bound-programs
 ```
 
 ### Parallel Builds
@@ -184,7 +184,7 @@ Bob supports parallel builds for faster compilation:
 
 ```bash
 # Build with 4 parallel jobs
-gmake -j4
+makei -j4
 ```
 
 ## Helper Script: Upload Sources
@@ -238,16 +238,16 @@ chmod +x upload-sources.sh
 
 ## Troubleshooting
 
-### "gmake: command not found"
+### "makei: command not found"
 Install GNU Make:
 ```bash
-yum install make-gnu
+yum install tobi
 ```
 
 ### "bob: command not found"
 Install IBM i Bob:
 ```bash
-yum install ibmi-bob
+yum install tobi
 ```
 
 ### Compilation Errors
@@ -271,7 +271,7 @@ The build system can be integrated into CI/CD pipelines. See `azure-pipelines.ym
 1. Clone repository on IBM i
 2. Create/clean build library
 3. Upload sources to source physical files
-4. Run `gmake` to build
+4. Run `makei` to build
 5. Run tests (if applicable)
 6. Deploy to production library
 

@@ -6,14 +6,14 @@
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/bmarolleau/ibmi-samco.git
+git clone -b demo1 https://github.com/bmarolleau/ibmi-samco.git
 cd ibmi-samco
 
 # 2. Setup (creates library, uploads sources)
 ./setup-build.sh SAMCO
 
 # 3. Build everything
-gmake
+makei
 
 # Done! Your application is compiled in library SAMCO
 ```
@@ -35,7 +35,7 @@ The build system uses **IBM i Bob** (Better Object Builder) - a modern make-base
    - Creates source physical files (QRPGLESRC, QDDSSRC, etc.)
    - Copies IFS sources to source members
 
-2. **Make** (`gmake`):
+2. **Make** (`makei`):
    - Reads Rules.mk for compilation rules
    - Builds objects in correct dependency order
    - Compiles only what's needed (incremental builds)
@@ -44,26 +44,26 @@ The build system uses **IBM i Bob** (Better Object Builder) - a modern make-base
 
 ```bash
 # Build everything
-gmake
+makei
 
 # Build to different library
-gmake BUILDLIB=SAMCODEV
+makei BUILDLIB=SAMCODEV
 
 # Build only database objects
-gmake database
+makei database
 
 # Build only programs
-gmake programs
+makei programs
 
 # Build with 4 parallel jobs (faster!)
-gmake -j4
+makei -j4
 
 # See all available targets
-gmake help
+makei help
 
 # Re-setup after source changes
 ./setup-build.sh SAMCO
-gmake
+makei
 ```
 
 ## Build Targets Explained
@@ -86,31 +86,31 @@ gmake
 ### Initial Setup
 ```bash
 ./setup-build.sh SAMCO
-gmake
+makei
 ```
 
 ### After Changing a Program
 ```bash
 # Option 1: Re-upload and rebuild everything
 ./setup-build.sh SAMCO
-gmake
+makei
 
 # Option 2: Upload just the changed file
 system "CPYFRMSTMF FROMSTMF('SAMCO_SRC/QRPGLESRC/COU200.PGM.RPGLE') \
         TOMBR('/QSYS.LIB/SAMCO.LIB/QRPGLESRC.FILE/COU200.MBR') \
         MBROPT(*REPLACE)"
-gmake SAMCO_SRC/QRPGLESRC/COU200.PGM.RPGLE
+makei SAMCO_SRC/QRPGLESRC/COU200.PGM.RPGLE
 ```
 
 ### Development vs Production
 ```bash
 # Development
 ./setup-build.sh SAMCODEV
-gmake BUILDLIB=SAMCODEV
+makei BUILDLIB=SAMCODEV
 
 # Production
 ./setup-build.sh SAMCO
-gmake BUILDLIB=SAMCO
+makei BUILDLIB=SAMCO
 ```
 
 ### Clean Build
@@ -118,7 +118,7 @@ gmake BUILDLIB=SAMCO
 # Delete library and rebuild from scratch
 system "DLTLIB LIB(SAMCO)"
 ./setup-build.sh SAMCO
-gmake
+makei
 ```
 
 ## Understanding the Build Order
@@ -144,7 +144,7 @@ Bob automatically builds in the correct order:
 
 ## Troubleshooting
 
-### "gmake: command not found"
+### "makei: command not found"
 ```bash
 yum install make-gnu
 ```
@@ -186,16 +186,16 @@ system "CRTLIB LIB(SAMCO) TEXT('SAMCO Application')"
 ### Build Specific File
 ```bash
 # Build just one program
-gmake SAMCO_SRC/QRPGLESRC/COU200.PGM.RPGLE
+makei SAMCO_SRC/QRPGLESRC/COU200.PGM.RPGLE
 
 # Build just one display file
-gmake SAMCO_SRC/QDDSSRC/COU200D.DSPF
+makei SAMCO_SRC/QDDSSRC/COU200D.DSPF
 ```
 
 ### Parallel Builds
 ```bash
 # Use 8 parallel jobs for faster builds
-gmake -j8
+makei -j8
 ```
 
 ### Custom Include Paths
@@ -223,7 +223,7 @@ If using Code for IBM i extension:
 1. Upload project to IFS using "Upload to IFS"
 2. Open SSH terminal in VS Code
 3. Navigate to project directory
-4. Run `./setup-build.sh` and `gmake`
+4. Run `./setup-build.sh` and `makei`
 
 ## CI/CD Integration
 
@@ -235,7 +235,7 @@ steps:
 - script: |
     ssh ibmiuser@youribmi "cd /home/ibmiuser/ibmi-samco && \
                            ./setup-build.sh SAMCODEV && \
-                           gmake BUILDLIB=SAMCODEV"
+                           makei BUILDLIB=SAMCODEV"
   displayName: 'Build on IBM i'
 ```
 
@@ -248,7 +248,7 @@ steps:
 
 ## Getting Help
 
-1. Run `gmake help` to see all targets
+1. Run `makei help` to see all targets
 2. Check [BUILD.md](BUILD.md) for detailed troubleshooting
 3. Review IBM i Bob documentation: https://github.com/IBM/ibmi-bob
 4. Check compilation messages: `system "DSPSPLF"`

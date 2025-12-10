@@ -9,22 +9,21 @@ SAMCO is a sample IBM i application demonstrating modern development practices i
 - SQL integration
 - Display files and menus
 - Service programs
-- Modern build automation with IBM i Bob
+- Modern build automation with Bob (Better Object Builder)
 
 ## Quick Start
 
 ### Prerequisites
 
 - IBM i system with SSH access
-- IBM i Bob installed (`yum install ibmi-bob`)
-- GNU Make installed (`yum install make-gnu`)
+- Bob (Better Object Builder) installed (`yum install tobi`)
 - Git (optional, for cloning)
 
 ### Building the Application
 
 1. **Clone or upload the repository to your IBM i system:**
    ```bash
-   git clone https://github.com/bmarolleau/ibmi-samco.git
+   git clone -b demo1 https://github.com/bmarolleau/ibmi-samco.git
    cd ibmi-samco
    ```
 
@@ -39,20 +38,20 @@ SAMCO is a sample IBM i application demonstrating modern development practices i
 
 3. **Build the application:**
    ```bash
-   gmake
+   makei
    ```
    Or build to a different library:
    ```bash
-   gmake BUILDLIB=SAMCODEV
+   makei BUILDLIB=SAMCODEV
    ```
 
 ### Build Options
 
 ```bash
-gmake              # Build everything
-gmake database     # Build database objects only
-gmake programs     # Build programs only
-gmake help         # Show all available targets
+makei              # Build everything
+makei database     # Build database objects only
+makei programs     # Build programs only
+makei help         # Show all available targets
 ```
 
 ## Documentation
@@ -140,8 +139,7 @@ The project includes an Azure DevOps pipeline configuration (`azure-pipelines.ym
 See [BUILD.md](BUILD.md) for detailed troubleshooting information.
 
 Common issues:
-- **"gmake: command not found"** - Install GNU Make: `yum install make-gnu`
-- **"bob: command not found"** - Install IBM i Bob: `yum install ibmi-bob`
+- **"makei: command not found"** - Install Bob: `yum install tobi`
 - **Compilation errors** - Check source physical files contain the correct source
 
 ## License
