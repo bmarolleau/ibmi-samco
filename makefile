@@ -1,133 +1,167 @@
-# SAMCO Application Makefile
-# This makefile uses IBM i Bob (makei) to build the entire application
+# SAMCO Application Makefile for Bob (Better Object Builder)
+# Based on IBM i Bob best practices from ibmi-company_system
+
+BIN_LIB=SAMCO
+LIBL=$(BIN_LIB)
+
+INCDIR=""
+PREPATH=/QSYS.LIB/$(BIN_LIB).LIB
+SHELL=/QOpenSys/usr/bin/qsh
 
 # Include the build rules
 include Rules.mk
 
-# Shell to use
-SHELL=/QOpenSys/pkgs/bin/bash
+# All targets - build everything
+all: .logs .evfevent library database programs
 
-# Default target library (can be overridden with: make BUILDLIB=MYLIB)
-BUILDLIB ?= SAMCO
+# Create log directories
+.logs:
+	mkdir .logs
 
-# All source files by type
-PF_SOURCES := $(wildcard SAMCO_SRC/QDDSSRC/*.PF)
-LF_SOURCES := $(wildcard SAMCO_SRC/QDDSSRC/*.LF)
-DSPF_SOURCES := $(wildcard SAMCO_SRC/QDDSSRC/*.DSPF)
-PRTF_SOURCES := $(wildcard SAMCO_SRC/QDDSSRC/*.PRTF)
-RPG_SOURCES := $(wildcard SAMCO_SRC/QRPGSRC/*.RPG)
-RPGLE_PGM_SOURCES := $(wildcard SAMCO_SRC/QRPGLESRC/*.PGM.RPGLE)
-SQLRPGLE_PGM_SOURCES := $(wildcard SAMCO_SRC/QRPGLESRC/*.PGM.SQLRPGLE)
-RPGLE_MOD_SOURCES := $(filter-out %.PGM.RPGLE %.PGM.SQLRPGLE,$(wildcard SAMCO_SRC/QRPGLESRC/*.RPGLE))
-SQLRPGLE_MOD_SOURCES := $(filter-out %.PGM.SQLRPGLE,$(wildcard SAMCO_SRC/QRPGLESRC/*.SQLRPGLE))
-CL_SOURCES := $(wildcard SAMCO_SRC/QCLSRC/*.CLLE) $(wildcard SAMCO_SRC/QCLSRC/*.PGM.CLLE)
-CBL_SOURCES := $(wildcard SAMCO_SRC/QCBLSRC/*.CBL)
-CMD_SOURCES := $(wildcard SAMCO_SRC/QCMDSRC/*.CMD)
-BND_SOURCES := $(wildcard SAMCO_SRC/QSRVSRC/*.BND)
-BNDDIR_SOURCES := $(wildcard SAMCO_SRC/QBNDSRC/*.BNDDIR)
-MSGF_SOURCES := $(wildcard SAMCO_SRC/QMSGFSRC/*.MSGF)
-PNLGRP_SOURCES := $(wildcard SAMCO_SRC/QPNLSRC/*.PNLGRP)
-MENU_SOURCES := $(wildcard SAMCO_SRC/QPNLSRC/*.MENU)
-TABLE_SOURCES := $(wildcard SAMCO_SRC/QSQLSRC/*.TABLE)
-VIEW_SOURCES := $(wildcard SAMCO_SRC/QSQLSRC/*.VIEW)
-SQLPRC_SOURCES := $(wildcard SAMCO_SRC/QSQLSRC/*.SQLPRC)
-SQLTRG_SOURCES := $(wildcard SAMCO_SRC/QSQLSRC/*.SQLTRG)
-SQLUDF_SOURCES := $(wildcard SAMCO_SRC/QSQLSRC/*.SQLUDF)
-SQLSEQ_SOURCES := $(wildcard SAMCO_SRC/QSQLSRC/*.SQLSEQ)
-SYSTRG_SOURCES := $(wildcard SAMCO_SRC/QTRGSRC/*.SYSTRG)
-DTAARA_SOURCES := $(wildcard SAMCO_SRC/QDTASRC/*.DTAARA)
-ILEPGM_SOURCES := $(wildcard SAMCO_SRC/QILESRC/*.ILEPGM)
-ILESRVPGM_SOURCES := $(wildcard SAMCO_SRC/QILESRVSRC/*.ILESRVPGM)
+.evfevent:
+	mkdir .evfevent
 
-# Default target - build everything
-.PHONY: all
-all: database programs
+# Create library
+library:
+	-system -q "CRTLIB LIB($(BIN_LIB)) TEXT('SAMCO Application')"
 
-# Build in proper order
-.PHONY: database
-database: binding-dirs message-files data-areas physical-files logical-files display-files print-files sql-objects
+# Database objects (files, tables, views)
+database: $(PREPATH)/SAMPLE.BNDDIR \
+	$(PREPATH)/SAMMSGF.MSGF \
+	$(PREPATH)/LASTORDNO.DTAARA \
+	$(PREPATH)/ADDRESS.FILE \
+	$(PREPATH)/ARTICLE.FILE \
+	$(PREPATH)/ARTIPROV.FILE \
+	$(PREPATH)/COUNTRY.FILE \
+	$(PREPATH)/CUSTADRE.FILE \
+	$(PREPATH)/CUSTOMER.FILE \
+	$(PREPATH)/DETORD.FILE \
+	$(PREPATH)/FAMILLY.FILE \
+	$(PREPATH)/ORDER.FILE \
+	$(PREPATH)/PARAMETER.FILE \
+	$(PREPATH)/PROVIDER.FILE \
+	$(PREPATH)/SAMREF.FILE \
+	$(PREPATH)/VATDEF.FILE \
+	$(PREPATH)/ARTICLE1.FILE \
+	$(PREPATH)/ARTICLE2.FILE \
+	$(PREPATH)/ARTIPRO1.FILE \
+	$(PREPATH)/ARTIPRO2.FILE \
+	$(PREPATH)/COUNTR1.FILE \
+	$(PREPATH)/CUSTOME1.FILE \
+	$(PREPATH)/CUSTOME2.FILE \
+	$(PREPATH)/DETORD1.FILE \
+	$(PREPATH)/FAMILL1.FILE \
+	$(PREPATH)/ORDER1.FILE \
+	$(PREPATH)/ORDER2.FILE \
+	$(PREPATH)/ORDER3.FILE \
+	$(PREPATH)/PROVIDE1.FILE \
+	$(PREPATH)/PROVIDE2.FILE \
+	$(PREPATH)/ART200D.FILE \
+	$(PREPATH)/ART201D.FILE \
+	$(PREPATH)/ART202D.FILE \
+	$(PREPATH)/ART250D.FILE \
+	$(PREPATH)/ART301D.FILE \
+	$(PREPATH)/COU200D.FILE \
+	$(PREPATH)/COU301D.FILE \
+	$(PREPATH)/CUS200D.FILE \
+	$(PREPATH)/CUS250D.FILE \
+	$(PREPATH)/CUS301D.FILE \
+	$(PREPATH)/FAM301D.FILE \
+	$(PREPATH)/ORD100D.FILE \
+	$(PREPATH)/ORD101D.FILE \
+	$(PREPATH)/ORD200D.FILE \
+	$(PREPATH)/ORD201D.FILE \
+	$(PREPATH)/ORD202D.FILE \
+	$(PREPATH)/PAR200D.FILE \
+	$(PREPATH)/PRO200D.FILE \
+	$(PREPATH)/PRO201D.FILE \
+	$(PREPATH)/PRO202D.FILE \
+	$(PREPATH)/PRO250D.FILE \
+	$(PREPATH)/PRO301D.FILE \
+	$(PREPATH)/ORD500O.FILE \
+	$(PREPATH)/SAMHELP.PNLGRP \
+	$(PREPATH)/SAMMNU.MENU
 
-.PHONY: programs
-programs: modules service-programs bound-programs commands menus
+# Programs and modules
+programs: $(PREPATH)/LOG300.MODULE \
+	$(PREPATH)/ART300.MODULE \
+	$(PREPATH)/ART301.MODULE \
+	$(PREPATH)/ART302.MODULE \
+	$(PREPATH)/COU300.MODULE \
+	$(PREPATH)/COU301.MODULE \
+	$(PREPATH)/CUS300.MODULE \
+	$(PREPATH)/CUS301.MODULE \
+	$(PREPATH)/FAM300.MODULE \
+	$(PREPATH)/FAM301.MODULE \
+	$(PREPATH)/PAR300.MODULE \
+	$(PREPATH)/PRO200.MODULE \
+	$(PREPATH)/PRO202.MODULE \
+	$(PREPATH)/PRO300.MODULE \
+	$(PREPATH)/PRO301.MODULE \
+	$(PREPATH)/VAT300.MODULE \
+	$(PREPATH)/FARTICLE.SRVPGM \
+	$(PREPATH)/FCOUNTRY.SRVPGM \
+	$(PREPATH)/FCUSTOMER.SRVPGM \
+	$(PREPATH)/FFAMILLY.SRVPGM \
+	$(PREPATH)/FPARAMETER.SRVPGM \
+	$(PREPATH)/FPROVIDER.SRVPGM \
+	$(PREPATH)/FVAT.SRVPGM \
+	$(PREPATH)/LOG.SRVPGM \
+	$(PREPATH)/ART200.PGM \
+	$(PREPATH)/ART201.PGM \
+	$(PREPATH)/ART202.PGM \
+	$(PREPATH)/ART250.PGM \
+	$(PREPATH)/COU200.PGM \
+	$(PREPATH)/CUS200.PGM \
+	$(PREPATH)/CUS250.PGM \
+	$(PREPATH)/DAT001.PGM \
+	$(PREPATH)/DAT002.PGM \
+	$(PREPATH)/LOG100.PGM \
+	$(PREPATH)/ORD100.PGM \
+	$(PREPATH)/ORD101.PGM \
+	$(PREPATH)/ORD200.PGM \
+	$(PREPATH)/ORD201.PGM \
+	$(PREPATH)/ORD202.PGM \
+	$(PREPATH)/ORD500.PGM \
+	$(PREPATH)/ORD700.PGM \
+	$(PREPATH)/ORD900.PGM \
+	$(PREPATH)/ORD901.PGM \
+	$(PREPATH)/PAR200.PGM \
+	$(PREPATH)/PAR201.PGM \
+	$(PREPATH)/PRO201.PGM \
+	$(PREPATH)/PRO203.PGM \
+	$(PREPATH)/PRO250.PGM \
+	$(PREPATH)/ORD100C.PGM \
+	$(PREPATH)/ORD100C2.PGM \
+	$(PREPATH)/ORD500C.PGM \
+	$(PREPATH)/CRTORD.CMD \
+	$(PREPATH)/CVTSPLPDF.CMD
 
-# Individual build targets
-.PHONY: binding-dirs
-binding-dirs: $(BNDDIR_SOURCES)
+# Build command
+build: all
 
-.PHONY: message-files
-message-files: $(MSGF_SOURCES)
-
-.PHONY: data-areas
-data-areas: $(DTAARA_SOURCES)
-
-.PHONY: physical-files
-physical-files: $(PF_SOURCES)
-
-.PHONY: logical-files
-logical-files: $(LF_SOURCES)
-
-.PHONY: display-files
-display-files: $(DSPF_SOURCES)
-
-.PHONY: print-files
-print-files: $(PRTF_SOURCES)
-
-.PHONY: sql-objects
-sql-objects: $(TABLE_SOURCES) $(VIEW_SOURCES) $(SQLSEQ_SOURCES) $(SQLUDF_SOURCES) $(SQLPRC_SOURCES)
-
-.PHONY: modules
-modules: $(RPGLE_MOD_SOURCES) $(SQLRPGLE_MOD_SOURCES)
-
-.PHONY: service-programs
-service-programs: $(BND_SOURCES) $(ILESRVPGM_SOURCES)
-
-.PHONY: bound-programs
-bound-programs: $(RPG_SOURCES) $(RPGLE_PGM_SOURCES) $(SQLRPGLE_PGM_SOURCES) $(CL_SOURCES) $(CBL_SOURCES) $(ILEPGM_SOURCES)
-
-.PHONY: commands
-commands: $(CMD_SOURCES)
-
-.PHONY: menus
-menus: $(PNLGRP_SOURCES) $(MENU_SOURCES)
-
-.PHONY: triggers
-triggers: $(SQLTRG_SOURCES) $(SYSTRG_SOURCES)
-
-# Clean target (optional - removes objects from library)
-.PHONY: clean
-clean:
-	@echo "To clean, manually delete objects from library $(BUILDLIB)"
+# Compile specific files
+compile:
+	@echo "Use: makei compile -f <file>"
 
 # Help target
-.PHONY: help
 help:
-	@echo "SAMCO Application Build System"
-	@echo "=============================="
+	@echo "SAMCO Application Build System (Bob)"
+	@echo "====================================="
 	@echo ""
-	@echo "Usage: make [target] [BUILDLIB=library]"
+	@echo "Usage: makei [target] [BIN_LIB=library]"
 	@echo ""
 	@echo "Targets:"
-	@echo "  all              - Build entire application (default)"
-	@echo "  database         - Build database objects only"
-	@echo "  programs         - Build programs only"
-	@echo "  binding-dirs     - Build binding directories"
-	@echo "  message-files    - Build message files"
-	@echo "  data-areas       - Build data areas"
-	@echo "  physical-files   - Build physical files"
-	@echo "  logical-files    - Build logical files"
-	@echo "  display-files    - Build display files"
-	@echo "  print-files      - Build print files"
-	@echo "  sql-objects      - Build SQL objects (tables, views, etc.)"
-	@echo "  modules          - Build RPGLE modules"
-	@echo "  service-programs - Build service programs"
-	@echo "  bound-programs   - Build bound programs"
-	@echo "  commands         - Build commands"
-	@echo "  menus            - Build menus and panel groups"
-	@echo "  triggers         - Build triggers"
-	@echo "  help             - Show this help message"
+	@echo "  all      - Build entire application (default)"
+	@echo "  build    - Same as 'all'"
+	@echo "  library  - Create library only"
+	@echo "  database - Build database objects"
+	@echo "  programs - Build programs and service programs"
+	@echo "  compile  - Compile specific files with -f option"
+	@echo "  help     - Show this help message"
 	@echo ""
 	@echo "Examples:"
 	@echo "  makei                    # Build everything to SAMCO library"
-	@echo "  makei BUILDLIB=SAMCODEV  # Build to SAMCODEV library"
+	@echo "  makei BIN_LIB=SAMCODEV   # Build to SAMCODEV library"
 	@echo "  makei database           # Build only database objects"
-	@echo "  makei programs           # Build only programs"
+	@echo "  makei compile -f qrpglesrc/COU200.PGM.RPGLE"

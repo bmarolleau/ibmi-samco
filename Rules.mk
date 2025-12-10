@@ -1,181 +1,133 @@
-# IBM i Bob Build Rules for SAMCO Application
-# This file defines the build rules for all object types in the project
+# SAMCO Application Build Rules for Bob
+# Based on IBM i Bob best practices
 
-# Build library - can be overridden with BOB_BUILD_LIB environment variable
-BUILDLIB ?= SAMCO
+# Physical Files
+$(PREPATH)/%.FILE: qddssrc/%.PF
+	liblist -a $(LIBL);\
+	system "CRTPF FILE($(BIN_LIB)/$*) SRCFILE($(BIN_LIB)/QDDSSRC) SRCMBR($*) OPTION(*EVENTF) GENLVL(20)" | tee -a .logs/$*.splf
 
-# Include path for copy books and prototypes
-INCLUDES := SAMCO_SRC/QPROTOSRC
+# Logical Files
+$(PREPATH)/%.FILE: qddssrc/%.LF
+	liblist -a $(LIBL);\
+	system "CRTLF FILE($(BIN_LIB)/$*) SRCFILE($(BIN_LIB)/QDDSSRC) SRCMBR($*) OPTION(*EVENTF) GENLVL(20)" | tee -a .logs/$*.splf
 
-# Object library
-OBJLIB := $(BUILDLIB)
+# Display Files
+$(PREPATH)/%.FILE: qddssrc/%.DSPF
+	liblist -a $(LIBL);\
+	system "CRTDSPF FILE($(BIN_LIB)/$*) SRCFILE($(BIN_LIB)/QDDSSRC) SRCMBR($*) OPTION(*EVENTF) RSTDSP(*YES)" | tee -a .logs/$*.splf
 
-#-------------------------------------------------------------------------------
-# Physical Files (PF)
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QDDSSRC/%.PF: SAMCO_SRC/QDDSSRC/%.PF
-	system "CRTPF FILE($(OBJLIB)/$*) SRCFILE($(BUILDLIB)/QDDSSRC) SRCMBR($*) OPTION(*EVENTF) GENLVL(20)"
+# Print Files
+$(PREPATH)/%.FILE: qddssrc/%.PRTF
+	liblist -a $(LIBL);\
+	system "CRTPRTF FILE($(BIN_LIB)/$*) SRCFILE($(BIN_LIB)/QDDSSRC) SRCMBR($*) OPTION(*EVENTF)" | tee -a .logs/$*.splf
 
-#-------------------------------------------------------------------------------
-# Logical Files (LF)
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QDDSSRC/%.LF: SAMCO_SRC/QDDSSRC/%.LF
-	system "CRTLF FILE($(OBJLIB)/$*) SRCFILE($(BUILDLIB)/QDDSSRC) SRCMBR($*) OPTION(*EVENTF) GENLVL(20)"
+# RPGLE Modules
+$(PREPATH)/%.MODULE: qrpglesrc/%.RPGLE
+	liblist -a $(LIBL);\
+	system "CRTRPGMOD MODULE($(BIN_LIB)/$*) SRCFILE($(BIN_LIB)/QRPGLESRC) SRCMBR($*) OPTION(*EVENTF) DBGVIEW(*SOURCE) INCDIR('/QOpenSys/QIBM/ProdData/OPS/tools/include' '$(INCDIR)' 'SAMCO_SRC/QPROTOSRC')" | tee -a .logs/$*.splf
 
-#-------------------------------------------------------------------------------
-# Display Files (DSPF)
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QDDSSRC/%.DSPF: SAMCO_SRC/QDDSSRC/%.DSPF
-	system "CRTDSPF FILE($(OBJLIB)/$*) SRCFILE($(BUILDLIB)/QDDSSRC) SRCMBR($*) OPTION(*EVENTF) RSTDSP(*YES)"
-
-#-------------------------------------------------------------------------------
-# Print Files (PRTF)
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QDDSSRC/%.PRTF: SAMCO_SRC/QDDSSRC/%.PRTF
-	system "CRTPRTF FILE($(OBJLIB)/$*) SRCFILE($(BUILDLIB)/QPRTFSRC) SRCMBR($*) OPTION(*EVENTF)"
-
-#-------------------------------------------------------------------------------
-# RPG Programs (Fixed Format)
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QRPGSRC/%.RPG: SAMCO_SRC/QRPGSRC/%.RPG
-	system "CRTRPGPGM PGM($(OBJLIB)/$*) SRCFILE($(BUILDLIB)/QRPGSRC) SRCMBR($*) OPTION(*EVENTF) DBGVIEW(*SOURCE)"
-
-#-------------------------------------------------------------------------------
-# RPGLE Programs (Free Format)
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QRPGLESRC/%.PGM.RPGLE: SAMCO_SRC/QRPGLESRC/%.PGM.RPGLE
-	system "CRTBNDRPG PGM($(OBJLIB)/$*) SRCFILE($(BUILDLIB)/QRPGLESRC) SRCMBR($*) OPTION(*EVENTF) DBGVIEW(*SOURCE) INCDIR('$(INCLUDES)')"
-
-#-------------------------------------------------------------------------------
-# SQL RPGLE Programs
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QRPGLESRC/%.PGM.SQLRPGLE: SAMCO_SRC/QRPGLESRC/%.PGM.SQLRPGLE
-	system "CRTSQLRPGI OBJ($(OBJLIB)/$*) SRCFILE($(BUILDLIB)/QRPGLESRC) SRCMBR($*) COMMIT(*NONE) OBJTYPE(*PGM) OPTION(*EVENTF) DBGVIEW(*SOURCE) COMPILEOPT('INCDIR(''$(INCLUDES)'')')"
-
-#-------------------------------------------------------------------------------
-# RPGLE Modules (for service programs)
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QRPGLESRC/%.RPGLE: SAMCO_SRC/QRPGLESRC/%.RPGLE
-	system "CRTRPGMOD MODULE($(OBJLIB)/$*) SRCFILE($(BUILDLIB)/QRPGLESRC) SRCMBR($*) OPTION(*EVENTF) DBGVIEW(*SOURCE) INCDIR('$(INCLUDES)')"
-
-#-------------------------------------------------------------------------------
 # SQL RPGLE Modules
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QRPGLESRC/%.SQLRPGLE: SAMCO_SRC/QRPGLESRC/%.SQLRPGLE
-	system "CRTSQLRPGI OBJ($(OBJLIB)/$*) SRCFILE($(BUILDLIB)/QRPGLESRC) SRCMBR($*) COMMIT(*NONE) OBJTYPE(*MODULE) OPTION(*EVENTF) DBGVIEW(*SOURCE) COMPILEOPT('INCDIR(''$(INCLUDES)'')')"
+$(PREPATH)/%.MODULE: qrpglesrc/%.SQLRPGLE
+	liblist -a $(LIBL);\
+	system "CRTSQLRPGI OBJ($(BIN_LIB)/$*) SRCFILE($(BIN_LIB)/QRPGLESRC) SRCMBR($*) COMMIT(*NONE) OBJTYPE(*MODULE) OPTION(*EVENTF) DBGVIEW(*SOURCE) COMPILEOPT('INCDIR(''/QOpenSys/QIBM/ProdData/OPS/tools/include'' ''$(INCDIR)'' ''SAMCO_SRC/QPROTOSRC'')')" | tee -a .logs/$*.splf
 
-#-------------------------------------------------------------------------------
+# RPGLE Programs (bound)
+$(PREPATH)/%.PGM: qrpglesrc/%.PGM.RPGLE
+	liblist -a $(LIBL);\
+	system "CRTBNDRPG PGM($(BIN_LIB)/$*) SRCFILE($(BIN_LIB)/QRPGLESRC) SRCMBR($*) OPTION(*EVENTF) DBGVIEW(*SOURCE) INCDIR('/QOpenSys/QIBM/ProdData/OPS/tools/include' '$(INCDIR)' 'SAMCO_SRC/QPROTOSRC')" | tee -a .logs/$*.splf
+
+# SQL RPGLE Programs (bound)
+$(PREPATH)/%.PGM: qrpglesrc/%.PGM.SQLRPGLE
+	liblist -a $(LIBL);\
+	system "CRTSQLRPGI OBJ($(BIN_LIB)/$*) SRCFILE($(BIN_LIB)/QRPGLESRC) SRCMBR($*) COMMIT(*NONE) OBJTYPE(*PGM) OPTION(*EVENTF) DBGVIEW(*SOURCE) COMPILEOPT('INCDIR(''/QOpenSys/QIBM/ProdData/OPS/tools/include'' ''$(INCDIR)'' ''SAMCO_SRC/QPROTOSRC'')')" | tee -a .logs/$*.splf
+
+# RPG Programs (fixed format)
+$(PREPATH)/%.PGM: qrpgsrc/%.RPG
+	liblist -a $(LIBL);\
+	system "CRTRPGPGM PGM($(BIN_LIB)/$*) SRCFILE($(BIN_LIB)/QRPGSRC) SRCMBR($*) OPTION(*EVENTF) DBGVIEW(*SOURCE)" | tee -a .logs/$*.splf
+
 # CL Programs
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QCLSRC/%.PGM.CLLE: SAMCO_SRC/QCLSRC/%.PGM.CLLE
-	system "CRTBNDCL PGM($(OBJLIB)/$*) SRCFILE($(BUILDLIB)/QCLSRC) SRCMBR($*) OPTION(*EVENTF) DBGVIEW(*SOURCE)"
+$(PREPATH)/%.PGM: qclsrc/%.PGM.CLLE
+	liblist -a $(LIBL);\
+	system "CRTBNDCL PGM($(BIN_LIB)/$*) SRCFILE($(BIN_LIB)/QCLSRC) SRCMBR($*) OPTION(*EVENTF) DBGVIEW(*SOURCE)" | tee -a .logs/$*.splf
 
-SAMCO_SRC/QCLSRC/%.CLLE: SAMCO_SRC/QCLSRC/%.CLLE
-	system "CRTBNDCL PGM($(OBJLIB)/$*) SRCFILE($(BUILDLIB)/QCLSRC) SRCMBR($*) OPTION(*EVENTF) DBGVIEW(*SOURCE)"
+$(PREPATH)/%.PGM: qclsrc/%.CLLE
+	liblist -a $(LIBL);\
+	system "CRTBNDCL PGM($(BIN_LIB)/$*) SRCFILE($(BIN_LIB)/QCLSRC) SRCMBR($*) OPTION(*EVENTF) DBGVIEW(*SOURCE)" | tee -a .logs/$*.splf
 
-#-------------------------------------------------------------------------------
 # COBOL Programs
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QCBLSRC/%.CBL: SAMCO_SRC/QCBLSRC/%.CBL
-	system "CRTBNDCBL PGM($(OBJLIB)/$*) SRCFILE($(BUILDLIB)/QCBLSRC) SRCMBR($*) OPTION(*EVENTF) DBGVIEW(*SOURCE)"
+$(PREPATH)/%.PGM: qcblsrc/%.CBL
+	liblist -a $(LIBL);\
+	system "CRTBNDCBL PGM($(BIN_LIB)/$*) SRCFILE($(BIN_LIB)/QCBLSRC) SRCMBR($*) OPTION(*EVENTF) DBGVIEW(*SOURCE)" | tee -a .logs/$*.splf
 
-#-------------------------------------------------------------------------------
-# Commands
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QCMDSRC/%.CMD: SAMCO_SRC/QCMDSRC/%.CMD
-	system "CRTCMD CMD($(OBJLIB)/$*) PGM($(OBJLIB)/$*) SRCFILE($(BUILDLIB)/QCMDSRC) SRCMBR($*)"
-
-#-------------------------------------------------------------------------------
 # Service Programs
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QSRVSRC/%.BND: SAMCO_SRC/QSRVSRC/%.BND
-	system "CRTSRVPGM SRVPGM($(OBJLIB)/$*) MODULE($(OBJLIB)/$*) SRCFILE($(BUILDLIB)/QSRVSRC) SRCMBR($*) OPTION(*EVENTF) ACTGRP(*CALLER) BNDDIR($(OBJLIB)/SAMPLE)"
+$(PREPATH)/%.SRVPGM: $(PREPATH)/%.MODULE qsrvsrc/%.BND
+	liblist -a $(LIBL);\
+	system "CRTSRVPGM SRVPGM($(BIN_LIB)/$*) MODULE($(BIN_LIB)/$*) SRCFILE($(BIN_LIB)/QSRVSRC) SRCMBR($*) OPTION(*EVENTF) ACTGRP(*CALLER) BNDDIR($(BIN_LIB)/SAMPLE)" | tee -a .logs/$*.splf
 
-#-------------------------------------------------------------------------------
+# ILE Programs (from modules)
+$(PREPATH)/%.PGM: $(PREPATH)/%.MODULE
+	liblist -a $(LIBL);\
+	system "CRTPGM PGM($(BIN_LIB)/$*) MODULE($(BIN_LIB)/$*) ACTGRP(*NEW) BNDDIR($(BIN_LIB)/SAMPLE)" | tee -a .logs/$*.splf
+
+# Commands
+$(PREPATH)/%.CMD: qcmdsrc/%.CMD
+	liblist -a $(LIBL);\
+	system "CRTCMD CMD($(BIN_LIB)/$*) PGM($(BIN_LIB)/$*) SRCFILE($(BIN_LIB)/QCMDSRC) SRCMBR($*)" | tee -a .logs/$*.splf
+
 # Binding Directories
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QBNDSRC/%.BNDDIR: SAMCO_SRC/QBNDSRC/%.BNDDIR
-	-system "DLTBNDDIR BNDDIR($(OBJLIB)/$*)"
-	system "CRTBNDDIR BNDDIR($(OBJLIB)/$*)"
+$(PREPATH)/%.BNDDIR: qbndsrc/%.BNDDIR
+	-system -q "DLTBNDDIR BNDDIR($(BIN_LIB)/$*)"
+	system "CRTBNDDIR BNDDIR($(BIN_LIB)/$*)" | tee -a .logs/$*.splf
 
-#-------------------------------------------------------------------------------
 # Message Files
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QMSGFSRC/%.MSGF: SAMCO_SRC/QMSGFSRC/%.MSGF
-	-system "DLTMSGF MSGF($(OBJLIB)/$*)"
-	system "CRTMSGF MSGF($(OBJLIB)/$*)"
+$(PREPATH)/%.MSGF: qmsgfsrc/%.MSGF
+	-system -q "DLTMSGF MSGF($(BIN_LIB)/$*)"
+	system "CRTMSGF MSGF($(BIN_LIB)/$*)" | tee -a .logs/$*.splf
 
-#-------------------------------------------------------------------------------
 # Panel Groups
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QPNLSRC/%.PNLGRP: SAMCO_SRC/QPNLSRC/%.PNLGRP
-	system "CRTPNLGRP PNLGRP($(OBJLIB)/$*) SRCFILE($(BUILDLIB)/QPNLSRC) SRCMBR($*) OPTION(*EVENTF)"
+$(PREPATH)/%.PNLGRP: qpnlsrc/%.PNLGRP
+	liblist -a $(LIBL);\
+	system "CRTPNLGRP PNLGRP($(BIN_LIB)/$*) SRCFILE($(BIN_LIB)/QPNLSRC) SRCMBR($*) OPTION(*EVENTF)" | tee -a .logs/$*.splf
 
-#-------------------------------------------------------------------------------
 # Menus
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QPNLSRC/%.MENU: SAMCO_SRC/QPNLSRC/%.MENU
-	system "CRTMNU MENU($(OBJLIB)/$*) TYPE(*UIM) SRCFILE($(BUILDLIB)/QPNLSRC) SRCMBR($*)"
+$(PREPATH)/%.MENU: qpnlsrc/%.MENU
+	liblist -a $(LIBL);\
+	system "CRTMNU MENU($(BIN_LIB)/$*) TYPE(*UIM) SRCFILE($(BIN_LIB)/QPNLSRC) SRCMBR($*)" | tee -a .logs/$*.splf
 
-#-------------------------------------------------------------------------------
-# SQL Tables
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QSQLSRC/%.TABLE: SAMCO_SRC/QSQLSRC/%.TABLE
-	system "RUNSQLSTM SRCFILE($(BUILDLIB)/QSQLSRC) SRCMBR($*) COMMIT(*NONE) NAMING(*SQL)"
-
-#-------------------------------------------------------------------------------
-# SQL Views
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QSQLSRC/%.VIEW: SAMCO_SRC/QSQLSRC/%.VIEW
-	system "RUNSQLSTM SRCFILE($(BUILDLIB)/QSQLSRC) SRCMBR($*) COMMIT(*NONE) NAMING(*SQL)"
-
-#-------------------------------------------------------------------------------
-# SQL Procedures
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QSQLSRC/%.SQLPRC: SAMCO_SRC/QSQLSRC/%.SQLPRC
-	system "RUNSQLSTM SRCFILE($(BUILDLIB)/QSQLSRC) SRCMBR($*) COMMIT(*NONE) NAMING(*SQL)"
-
-#-------------------------------------------------------------------------------
-# SQL Triggers
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QSQLSRC/%.SQLTRG: SAMCO_SRC/QSQLSRC/%.SQLTRG
-	system "RUNSQLSTM SRCFILE($(BUILDLIB)/QSQLSRC) SRCMBR($*) COMMIT(*NONE) NAMING(*SQL)"
-
-#-------------------------------------------------------------------------------
-# SQL UDFs
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QSQLSRC/%.SQLUDF: SAMCO_SRC/QSQLSRC/%.SQLUDF
-	system "RUNSQLSTM SRCFILE($(BUILDLIB)/QSQLSRC) SRCMBR($*) COMMIT(*NONE) NAMING(*SQL)"
-
-#-------------------------------------------------------------------------------
-# SQL Sequences
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QSQLSRC/%.SQLSEQ: SAMCO_SRC/QSQLSRC/%.SQLSEQ
-	system "RUNSQLSTM SRCFILE($(BUILDLIB)/QSQLSRC) SRCMBR($*) COMMIT(*NONE) NAMING(*SQL)"
-
-#-------------------------------------------------------------------------------
-# System Triggers
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QTRGSRC/%.SYSTRG: SAMCO_SRC/QTRGSRC/%.SYSTRG
-	system "ADDPFTRG FILE($(OBJLIB)/$*) TRGTIME(*AFTER) TRGEVENT(*INSERT *UPDATE *DELETE) PGM($(OBJLIB)/$*) RPLTRG(*YES)"
-
-#-------------------------------------------------------------------------------
 # Data Areas
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QDTASRC/%.DTAARA: SAMCO_SRC/QDTASRC/%.DTAARA
-	-system "DLTDTAARA DTAARA($(OBJLIB)/$*)"
-	system "CRTDTAARA DTAARA($(OBJLIB)/$*) TYPE(*CHAR) LEN(10) VALUE('0000000000')"
+$(PREPATH)/%.DTAARA: qdtasrc/%.DTAARA
+	-system -q "DLTDTAARA DTAARA($(BIN_LIB)/$*)"
+	system "CRTDTAARA DTAARA($(BIN_LIB)/$*) TYPE(*CHAR) LEN(10) VALUE('0000000000')" | tee -a .logs/$*.splf
 
-#-------------------------------------------------------------------------------
-# ILE Programs (from QILESRC)
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QILESRC/%.ILEPGM: SAMCO_SRC/QILESRC/%.ILEPGM
-	system "CRTPGM PGM($(OBJLIB)/$*) MODULE($(OBJLIB)/$*) ACTGRP(*NEW) BNDDIR($(OBJLIB)/SAMPLE)"
+# SQL Tables
+$(PREPATH)/%.TABLE: qsqlsrc/%.TABLE
+	liblist -a $(LIBL);\
+	system "RUNSQLSTM SRCFILE($(BIN_LIB)/QSQLSRC) SRCMBR($*) COMMIT(*NONE) NAMING(*SQL)" | tee -a .logs/$*.splf
 
-#-------------------------------------------------------------------------------
-# ILE Service Programs (from QILESRVSRC)
-#-------------------------------------------------------------------------------
-SAMCO_SRC/QILESRVSRC/%.ILESRVPGM: SAMCO_SRC/QILESRVSRC/%.ILESRVPGM
-	system "CRTSRVPGM SRVPGM($(OBJLIB)/$*) MODULE($(OBJLIB)/$*) SRCFILE($(BUILDLIB)/QSRVSRC) ACTGRP(*CALLER) BNDDIR($(OBJLIB)/SAMPLE)"
+# SQL Views
+$(PREPATH)/%.VIEW: qsqlsrc/%.VIEW
+	liblist -a $(LIBL);\
+	system "RUNSQLSTM SRCFILE($(BIN_LIB)/QSQLSRC) SRCMBR($*) COMMIT(*NONE) NAMING(*SQL)" | tee -a .logs/$*.splf
+
+# SQL Procedures
+$(PREPATH)/%.SQLPRC: qsqlsrc/%.SQLPRC
+	liblist -a $(LIBL);\
+	system "RUNSQLSTM SRCFILE($(BIN_LIB)/QSQLSRC) SRCMBR($*) COMMIT(*NONE) NAMING(*SQL)" | tee -a .logs/$*.splf
+
+# SQL Triggers
+$(PREPATH)/%.SQLTRG: qsqlsrc/%.SQLTRG
+	liblist -a $(LIBL);\
+	system "RUNSQLSTM SRCFILE($(BIN_LIB)/QSQLSRC) SRCMBR($*) COMMIT(*NONE) NAMING(*SQL)" | tee -a .logs/$*.splf
+
+# SQL UDFs
+$(PREPATH)/%.SQLUDF: qsqlsrc/%.SQLUDF
+	liblist -a $(LIBL);\
+	system "RUNSQLSTM SRCFILE($(BIN_LIB)/QSQLSRC) SRCMBR($*) COMMIT(*NONE) NAMING(*SQL)" | tee -a .logs/$*.splf
+
+# SQL Sequences
+$(PREPATH)/%.SQLSEQ: qsqlsrc/%.SQLSEQ
+	liblist -a $(LIBL);\
+	system "RUNSQLSTM SRCFILE($(BIN_LIB)/QSQLSRC) SRCMBR($*) COMMIT(*NONE) NAMING(*SQL)" | tee -a .logs/$*.splf
 
 # Made with Bob
